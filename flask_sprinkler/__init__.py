@@ -12,9 +12,12 @@ class SprinklerPacket(serial.threaded.LineReader):
         logging.info(f'Connected to {transport}')
 
     def handle_line(self, packet):
-        logging.info(f'Captured packet {packet}')
+            logging.info(f'Captured packet {packet}')
 
 class Sprinkler:
+
+    sprinkler_state = {}
+    
     def __init__(self, app):
         self.serial_device = app.config.get('SERIAL_DEVICE','/dev/serial0')
         self.serial_baudrate = app.config.get('SERIAL_BAUDRATE', 9600)
@@ -54,20 +57,12 @@ class Sprinkler:
                 self.serial.timeout = self.serial_timeout
                 self.serial.open()
 
-    def _on_packet(self, packet):
-        logging.info(packet)
-
-    def set_on_packet(self, packet_handler):
-        self._on_packet = packet_handler
-
-    def on_packet(self, packet_function):
-        def wrapper():
-            self._on_packet = packet_function
-        return wrapper
-
     def write(self, data):
         if self.send_packet:
             self.send_packet(data)
+    
+    def _on_packet(self, data):
+        logging.info(f'Sprinkler caught: {data}')
 
 
         
