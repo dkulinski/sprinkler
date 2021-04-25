@@ -10,7 +10,6 @@
     <form action="/v1/zone" method="post">
         Zone:
         <select name="zone" id="zone">
-            <option value="00">STOP</option>
             <option value="56">1-E</option>
             <option value="57">1-WB</option>
             <option value="24">2</option>
@@ -51,7 +50,7 @@
             <option value="12">27-NET </option>
         </select>
         <br>
-        Time (minutes):<input type="number" name="time" id="time" value="15">
+        Time (minutes):<input type="number" name="time" id="time" value="2">
         <br>
         Append to current program: <input type="checkbox" name="append_zone" id="append_zone" checked="true">
         <br>
@@ -59,6 +58,12 @@
     </form>
     <form action="/v1/zone" method="get">
         <input type="submit" value="Get Current Program">
+    </form>
+    <form action="/v1/stopall" method="post">
+        <input type="submit" value="Stop all">
+    </form>
+    <form action="/v1/pause" method="post">
+    <input type="submit" value="Pause program">
     </form>
 </body>
 </html>

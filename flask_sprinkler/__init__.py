@@ -27,6 +27,7 @@ class SprinklerPacket(serial.threaded.FramedPacket):
             self.packet_handler(packet)
 
     def write_line(self, packet):
+        logging.debug(f'Sending: {packet}')
         self.transport.write(self.START + packet.encode(self.ENCODING, self.UNICODE_HANDLING) + self.STOP)
 
     def handle_out_of_packet_data(self, data):
@@ -37,7 +38,10 @@ class SprinklerPacket(serial.threaded.FramedPacket):
 
 class Sprinkler:
 
-    sprinkler_state = {}
+    sprinkler_state = { 
+        'queue': [],
+        'queue_depth': 0
+    }
     
     def __init__(self, app):
         self.serial_device = app.config.get('SERIAL_DEVICE','/dev/serial0')
@@ -65,6 +69,7 @@ class Sprinkler:
             with serial.threaded.ReaderThread(self.serial, SprinklerPacket) as protocol:
                 self.send_packet = protocol.write_line
                 protocol.set_packet_handler(self.handle_packet)
+                protocol.write_line('SPR?')
                 while True:
                     time.sleep(0.1)
 
@@ -81,17 +86,39 @@ class Sprinkler:
             self.send_packet(data)
 
     def handle_packet(self, packet):
-        matches = re.match('SPRz(?P<zonenumber>\d{2})t(?P<timerval>\d{3})i(?P<queuepos>\w)|SPRq(?P<queuedepth>\w)', packet)
+        logging.debug(f'Received {packet}')
+        matches = re.match('SPRz(?P<zonenumber>\d{2})(t|q)(?P<timerval>\d{3})i(?P<queuepos>\w)|SPRq(?P<queuedepth>\w)', packet)
         if matches:
             groups = matches.groupdict()
             if groups['zonenumber'] and groups['queuepos'] is not 'X':
+                if len([zone for zone in self.sprinkler_state['queue'] if zone['zone'] == groups['zonenumber']]) > 0:
+                    zone_entry = [zone for zone in self.sprinkler_state['queue'] if zone['zone'] == groups['zonenumber']]
+                    zone_entry[0]['remaining'] = int(groups['timerval'])
+                    zone_entry[0]['queuepos'] = ord(groups['queuepos']) - 64
+                    logging.debug(f'{zone_entry}')
+                else:
+                    self.sprinkler_state['queue'].append(
+                        {
+                            'zone': groups['zonenumber'],
+                            'remaining': int(groups['timerval']),
+                            'queuepos': ord(groups['queuepos']) - 64
+                        }
+                    )
                 logging.debug(f'{groups["zonenumber"]} is in queue position {groups["queuepos"]} with {int(groups["timerval"])} minutes left')
+            if groups['zonenumber'] and groups['queuepos'] is 'X':
+                try:
+                    self.sprinkler_state['queue'].remove({ 'zone': groups['zonenumber'], 'remaining': 1, 'queuepos': 1})
+                except:
+                    pass
+
             if groups['queuedepth']:
                 if groups['queuedepth'] is '0':
                     self.sprinkler_state['queue_depth'] = 0
+                    self.sprinkler_state['queue'] = []
                 else:
                     self.sprinkler_state['queue_depth'] = ord(groups['queuedepth']) - 64
                 logging.debug(f'Queue depth is {self.sprinkler_state["queue_depth"]}')
+        logging.debug(self.sprinkler_state)
 
     def get_sprinkler_state(self):
         return self.sprinkler_state
