@@ -1,10 +1,13 @@
 import logging
+import json
 from flask import Flask, request, render_template
 from flask_sprinkler import Sprinkler
+from flask_bootstrap import Bootstrap
 
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
+Bootstrap(app)
 
 spr = Sprinkler(app)
 
@@ -22,7 +25,7 @@ def zone_set():
 
 @app.route('/v1/zone', methods=['GET'])
 def zone_get():
-    return("Current zones waiting:")
+    return(json.dumps(spr.get_sprinkler_state()))
 
 @app.route('/v1/stopall', methods=['POST'])
 def stop_all():

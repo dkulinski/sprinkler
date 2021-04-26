@@ -1,69 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sprinkler System Control</title>
-</head>
-<body>
-    <form action="/v1/zone" method="post">
-        Zone:
-        <select name="zone" id="zone">
-            <option value="56">1-E</option>
-            <option value="57">1-WB</option>
-            <option value="24">2</option>
-            <option value="42">3-W</option> 
-            <option value="43">3-BE</option>
-            <option value="40">4-I</option>
-            <option value="41">4-B</option>
-            <option value="38">5</option>
-            <option value="20">6</option>
-            <option value="36">7</option>     
-            <option value="28">8</option>     
-            <option value="22">9</option>     
-            <option value="34">10-B </option>     
-            <option value="35">10-I </option>     
-            <option value="50">11-I </option>     
-            <option value="51">11-B </option>     
-            <option value="04">12</option>     
-            <option value="53">13-E </option>
-            <option value="52">13-WB</option>
-            <option value="14">14</option>     
-            <option value="60">15-E</option>     
-            <option value="61">15-WB </option>     
-            <option value="30">16-RW </option>     
-            <option value="31">16-GZ </option>     
-            <option value="08">17</option>     
-            <option value="54">18-I </option>     
-            <option value="55">18-B </option>     
-            <option value="58">19-I</option>     
-            <option value="59">19-B </option>     
-            <option value="44">20-P </option>     
-            <option value="45">20-BH </option>     
-            <option value="47">21-FH </option>
-            <option value="18">22-FWB </option>
-            <option value="46">23-FEB </option>
-            <option value="13">24-FI </option>
-            <option value="26">25-ST </option>
-            <option value="27">26-NWT </option>
-            <option value="12">27-NET </option>
-        </select>
-        <br>
-        Time (minutes):<input type="number" name="time" id="time" value="2">
-        <br>
-        Append to current program: <input type="checkbox" name="append_zone" id="append_zone" checked="true">
-        <br>
-        <input type="submit" value="Send">
-    </form>
-    <form action="/v1/zone" method="get">
-        <input type="submit" value="Get Current Program">
-    </form>
-    <form action="/v1/stopall" method="post">
-        <input type="submit" value="Stop all">
-    </form>
-    <form action="/v1/pause" method="post">
-    <input type="submit" value="Pause program">
-    </form>
-</body>
-</html>
+{% extends "bootstrap/base.html" %}
+{% block title %}Sprinkler Control{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="container-fluid"><h2>Sprinkler Controller</h2></div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <form id="zone">
+                Zone:
+                <select name="zone" id="zone-select">
+                    <option value="56">1-E</option>
+                    <option value="57">1-WB</option>
+                    <option value="24">2</option>
+                    <option value="42">3-W</option> 
+                    <option value="43">3-BE</option>
+                    <option value="40">4-I</option>
+                    <option value="41">4-B</option>
+                    <option value="38">5</option>
+                    <option value="20">6</option>
+                    <option value="36">7</option>     
+                    <option value="28">8</option>     
+                    <option value="22">9</option>     
+                    <option value="34">10-B </option>     
+                    <option value="35">10-I </option>     
+                    <option value="50">11-I </option>     
+                    <option value="51">11-B </option>     
+                    <option value="04">12</option>     
+                    <option value="53">13-E </option>
+                    <option value="52">13-WB</option>
+                    <option value="14">14</option>     
+                    <option value="60">15-E</option>     
+                    <option value="61">15-WB </option>     
+                    <option value="30">16-RW </option>     
+                    <option value="31">16-GZ </option>     
+                    <option value="08">17</option>     
+                    <option value="54">18-I </option>     
+                    <option value="55">18-B </option>     
+                    <option value="58">19-I</option>     
+                    <option value="59">19-B </option>     
+                    <option value="44">20-P </option>     
+                    <option value="45">20-BH </option>     
+                    <option value="47">21-FH </option>
+                    <option value="18">22-FWB </option>
+                    <option value="46">23-FEB </option>
+                    <option value="13">24-FI </option>
+                    <option value="26">25-ST </option>
+                    <option value="27">26-NWT </option>
+                    <option value="12">27-NET </option>
+                </select>
+                <br>
+                Time (minutes):<input type="number" name="time" id="time" value="2">
+                <br>
+                Append to current program: <input type="checkbox" name="append_zone" id="append_zone" checked="true">
+                <br>
+                <input type="submit" value="Send">
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form action="/v1/stopall" method="post">
+            <input type="submit" value="Stop all">
+        </form>
+        <form action="/v1/pause" method="post">
+        <input type="submit" value="Pause program">
+        </form>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div id="queuelength">
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div id="queue"></div>
+    </div>
+</div> 
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $("#zone").submit(function(event) {
+        event.preventDefault();
+        $.post("/v1/zone", $("#zone").serialize());
+    })
+
+    function getZones() {
+        $.getJSON('/v1/zone', function(data) {
+            $.each(data, function(key, val) {
+                if(key == "queue_depth") {
+                    $("#queuelength").text("Zones in queue: " + val)
+                }
+                if(key == "queue" && val.length > 0)
+                {
+                    $('#queue').empty();
+                    val.forEach( function(zone, index, arr) {
+                        $("#queue").append(
+                            'zone ' + $('#zone-select option[value="' + zone['zone'] + '"]').text() + ' has ' + zone['remaining'] + " minutes remaining.<br/>"
+                        );
+                    });
+                } else if(key == "queue" && val.length == 0) {
+                    $("#queue").empty();
+                }
+            });
+        });
+    }
+
+    setInterval(
+        function() {
+            getZones();
+        },
+        1000
+    );
+
+</script>
+{% endblock %}
