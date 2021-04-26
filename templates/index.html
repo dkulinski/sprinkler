@@ -48,6 +48,7 @@
                     <option value="26">25-ST </option>
                     <option value="27">26-NWT </option>
                     <option value="12">27-NET </option>
+                    <option value="99">Pause</option>
                 </select>
                 <br>
                 Time (minutes):<input type="number" name="time" id="time" value="2">
@@ -58,13 +59,21 @@
         </form>
     </div>
     <div class="col-md-4">
-        <form action="/v1/stopall" method="post">
+        <form id="stopall">
             <input type="submit" value="Stop all">
         </form>
-        <form action="/v1/pause" method="post">
+        <form id="pause">
         <input type="submit" value="Pause program">
         </form>
 </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        Current Zones in Program:
+    </div>
+    <div class="col-md-8">
+        Current Queue:
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -83,12 +92,20 @@
         event.preventDefault();
         $.post("/v1/zone", $("#zone").serialize());
     })
+    $("#pause").submit(function(event) {
+        event.preventDefault();
+        $.post("/v1/pause");
+    })
+    $("#stopall").submit(function(event) {
+        event.preventDefault();
+        $.post("/v1/stopall");
+    })
 
     function getZones() {
         $.getJSON('/v1/zone', function(data) {
             $.each(data, function(key, val) {
                 if(key == "queue_depth") {
-                    $("#queuelength").text("Zones in queue: " + val)
+                    $("#queuelength").html('<h2>' + val + '</h2>');
                 }
                 if(key == "queue" && val.length > 0)
                 {
