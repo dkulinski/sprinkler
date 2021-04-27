@@ -118,6 +118,7 @@
                 if(key == "queue" && val.length > 0)
                 {
                     $('#queue').empty();
+                    val.sort((a,b) => a.queuepos - b.queuepos);
                     val.forEach( function(zone, index, arr) {
                         $("#queue").append(
                             'zone ' + $('#zone-select option[value="' + zone['zone'] + '"]').text() + ' has ' + zone['remaining'] + " minutes remaining.<br/>"
