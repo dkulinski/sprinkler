@@ -53,9 +53,9 @@
                 <br>
                 Time (minutes):<input type="number" name="time" id="time" value="2">
                 <br>
-                Append to current program: <input type="checkbox" name="append_zone" id="append_zone" checked="true">
+                Replace current queue: <input type="checkbox" name="append_zone" id="append_zone">
                 <br>
-                <input type="submit" value="Send">
+                <input type="submit" id="zone_set" value="Add to queue">
         </form>
     </div>
     <div class="col-md-4">
@@ -69,7 +69,7 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        Current Zones in Program:
+        Current steps in queue:
     </div>
     <div class="col-md-8">
         Current Queue:
@@ -88,6 +88,14 @@
 {% block scripts %}
 {{ super() }}
 <script>
+    $("#append_zone").change(function() {
+        if(this.checked) {
+            $("#zone_set").val('Replace queue');
+        } else {
+            $("#zone_set").val('Add to queue');
+        }
+    });
+
     $("#zone").submit(function(event) {
         event.preventDefault();
         $.post("/v1/zone", $("#zone").serialize());
