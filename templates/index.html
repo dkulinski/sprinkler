@@ -3,95 +3,126 @@
 
 {% block content %}
 <div class="row">
-<div class="container-fluid"><h2>Sprinkler Controller</h2></div>
-</div>
-<div class="row">
-    <div class="col-md-8">
-        <form id="zone">
-                Zone:
-                <select name="zone" id="zone-select">
-                    <option value="56">1-E</option>
-                    <option value="57">1-WB</option>
-                    <option value="24">2</option>
-                    <option value="42">3-W</option> 
-                    <option value="43">3-BE</option>
-                    <option value="40">4-I</option>
-                    <option value="41">4-B</option>
-                    <option value="38">5</option>
-                    <option value="20">6</option>
-                    <option value="36">7</option>     
-                    <option value="28">8</option>     
-                    <option value="22">9</option>     
-                    <option value="34">10-B </option>     
-                    <option value="35">10-I </option>     
-                    <option value="50">11-I </option>     
-                    <option value="51">11-B </option>     
-                    <option value="04">12</option>     
-                    <option value="53">13-E </option>
-                    <option value="52">13-WB</option>
-                    <option value="14">14</option>     
-                    <option value="60">15-E</option>     
-                    <option value="61">15-WB </option>     
-                    <option value="30">16-RW </option>     
-                    <option value="31">16-GZ </option>     
-                    <option value="08">17</option>     
-                    <option value="54">18-I </option>     
-                    <option value="55">18-B </option>     
-                    <option value="58">19-I</option>     
-                    <option value="59">19-B </option>     
-                    <option value="44">20-P </option>     
-                    <option value="45">20-BH </option>     
-                    <option value="47">21-FH </option>
-                    <option value="18">22-FWB </option>
-                    <option value="46">23-FEB </option>
-                    <option value="13">24-FI </option>
-                    <option value="26">25-ST </option>
-                    <option value="27">26-NWT </option>
-                    <option value="12">27-NET </option>
-                    <option value="99">Pause</option>
-                </select>
-                <br>
-                Time (minutes):<input type="number" name="time" id="time" value="2">
-                <br>
-                Replace current queue: <input type="checkbox" name="append_zone" id="append_zone">
-                <br>
-                <input type="submit" id="zone_set" value="Add to queue">
-        </form>
-    </div>
-    <div class="col-md-4">
-        <form id="stopall">
-            <input type="submit" value="Stop all">
-        </form>
-        <form id="pause">
-        <input type="submit" value="Pause program">
-        </form>
-</div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        Current steps in queue:
-    </div>
-    <div class="col-md-8">
-        Current Queue:
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div id="queuelength">
+    <div class="col-xs-12">
+        <div class="container">
+            <h2>Sprinkler Controller</h2>
         </div>
     </div>
-    <div class="col-md-8">
-        <div id="queue"></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <form id="zone">
+                    Zone:
+                    <select name="zone" id="zone-select" class="form-control">
+                        <option value="56">1-E</option>
+                        <option value="57">1-WB</option>
+                        <option value="24">2</option>
+                        <option value="42">3-W</option> 
+                        <option value="43">3-BE</option>
+                        <option value="40">4-I</option>
+                        <option value="41">4-B</option>
+                        <option value="38">5</option>
+                        <option value="20">6</option>
+                        <option value="36">7</option>     
+                        <option value="28">8</option>     
+                        <option value="22">9</option>     
+                        <option value="34">10-B </option>     
+                        <option value="35">10-I </option>     
+                        <option value="50">11-I </option>     
+                        <option value="51">11-B </option>     
+                        <option value="04">12</option>     
+                        <option value="53">13-E </option>
+                        <option value="52">13-WB</option>
+                        <option value="14">14</option>     
+                        <option value="60">15-E</option>     
+                        <option value="61">15-WB </option>     
+                        <option value="30">16-RW </option>     
+                        <option value="31">16-GZ </option>     
+                        <option value="08">17</option>     
+                        <option value="54">18-I </option>     
+                        <option value="55">18-B </option>     
+                        <option value="58">19-I</option>     
+                        <option value="59">19-B </option>     
+                        <option value="44">20-P </option>     
+                        <option value="45">20-BH </option>     
+                        <option value="47">21-FH </option>
+                        <option value="18">22-FWB </option>
+                        <option value="46">23-FEB </option>
+                        <option value="13">24-FI </option>
+                        <option value="26">25-ST </option>
+                        <option value="27">26-NWT </option>
+                        <option value="12">27-NET </option>
+                        <option value="99">Pause</option>
+                    </select>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Time (minutes):
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="time" id="option1" value="15">15 minutes
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="time" id="option2"  value="60">1 hour
+                                </label>
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="time" id="option2"  value="120" checked>2 hours
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="time" id="option3" value="180">3 hours
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            Replace current queue: <input type="checkbox" name="append_zone" id="append_zone">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <input type="submit" id="zone_set" value="Add to queue">
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="col-xs-6">
+            <form id="stopall">
+                <input type="submit" value="Stop all">
+            </form>
+            <form id="pause">
+            <input type="submit" value="Pause program">
+            </form>
     </div>
-</div> 
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            Current steps in queue:
+        </div>
+        <div class="col-xs-6">
+            Current Queue:
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div id="queuelength">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div id="queue"></div>
+        </div>
+    </div> 
+</div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}
 <script>
     $("#append_zone").change(function() {
         if(this.checked) {
+            $("#zone_set").css("color","red");
             $("#zone_set").val('Replace queue');
         } else {
+            $("#zone_set").css("color","");
             $("#zone_set").val('Add to queue');
         }
     });
@@ -120,9 +151,12 @@
                     $('#queue').empty();
                     val.sort((a,b) => a.queuepos - b.queuepos);
                     val.forEach( function(zone, index, arr) {
-                        $("#queue").append(
-                            'zone ' + $('#zone-select option[value="' + zone['zone'] + '"]').text() + ' has ' + zone['remaining'] + " minutes remaining.<br/>"
-                        );
+                        if (zone["queuepos"] == 1) {
+                                queuestr = 'zone ' + $('#zone-select option[value="' + zone['zone'] + '"]').text() + ' has ' + zone['remaining'] + " minutes remaining.<br/>"
+                            } else {
+                                queuestr = 'zone ' + $('#zone-select option[value="' + zone['zone'] + '"]').text() + ' has ' + zone['remaining'] + " minutes scheduled.<br/>"
+                            }
+                        $("#queue").append(queuestr);
                     });
                 } else if(key == "queue" && val.length == 0) {
                     $("#queue").empty();
