@@ -112,8 +112,11 @@ class Sprinkler:
                     pass
 
             if groups['queuedepth']:
-                if groups['queuedepth'] is '0':
+                if groups['queuedepth'] == '0':
                     self.sprinkler_state['queue_depth'] = 0
+                    self.sprinkler_state['queue'] = []
+                elif (ord(groups['queuedepth']) - 64) < len(self.sprinkler_state['queue']):
+                    self.sprinkler_state['queue_depth'] = ord(groups['queuedepth']) - 64
                     self.sprinkler_state['queue'] = []
                 else:
                     self.sprinkler_state['queue_depth'] = ord(groups['queuedepth']) - 64

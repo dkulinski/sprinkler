@@ -19,7 +19,12 @@ def hello():
 def zone_set():
     zone = request.form['zone']
     time = int(request.form['time'])
-    spr.write(f'SPRz{zone}q{time:03}')
+    zone_replace = request.form.get('append_zone', False)
+    if zone_replace:
+        spr.write(f'SPRz{zone}t{time:03}')
+        spr.write(f'SPRQ?')
+    else:
+        spr.write(f'SPRz{zone}q{time:03}')
     logging.debug(f'Sent SPRz{zone}q{time:03}')
     return(render_template('index.html'))
 
