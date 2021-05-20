@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve sprinkler
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=/home/pi/dev/sprinkler
+Environment="PATH=/home/pi/dev/sprinkler/venv/bin"
+ExecStart=/home/pi/dev/sprinkler/venv/bin/gunicorn --workers 1 --bind unix:sprinkler.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
